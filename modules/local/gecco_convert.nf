@@ -17,7 +17,6 @@ process GECCO_CONVERT {
     """
     echo "Starting GECCO run with custom HMM" >> gecco.log
     
-        echo "Custom HMM run failed. GECCO run with default HMM" >> gecco.log
         gecco run \\
             --genome input.gbk \\
             --output-dir . \\
