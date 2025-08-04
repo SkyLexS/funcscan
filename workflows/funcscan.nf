@@ -32,6 +32,10 @@ include { TAXA_CLASS                } from '../subworkflows/local/taxa_class'
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
+//GECCO
+
+include { GECCO_CONVERT             } from '../modules/local/gecco_convert'
+
 //
 // MODULE: Installed directly from nf-core/modules
 //

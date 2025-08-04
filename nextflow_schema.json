@@ -5,6 +5,35 @@
     "description": "Pipeline for screening for functional components of assembled contigs",
     "type": "object",
     "$defs": {
+        "gecco_options": {
+            "title": "GECCO biosynthetic gene cluster prediction options",
+            "type": "object",
+            "description": "Parameters for running GECCO BGC prediction",
+            "default": "",
+            "properties": {
+                "run_gecco": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Run GECCO for biosynthetic gene cluster prediction",
+                    "help_text": "Enable this option to predict biosynthetic gene clusters using GECCO."
+                },
+                "input_gbk": {
+                    "type": "string",
+                    "description": "Path to custom HMM profile for GECCO",
+                    "format": "file-path",
+                    "exists": true,
+                    "help_text": "Provide a custom HMM profile file. If not provided, GECCO will use its default HMM profiles."
+                },
+                "gecco_hmm": {
+                    "type": "string",
+                    "description": "Path to custom HMM profile for GECCO",
+                    "format": "file-path",
+                    "exists": true,
+                    "help_text": "Provide a custom HMM profile file. If not provided, GECCO will use its default HMM profiles."
+                }
+            },
+            "fa_icon": "fas fa-angle-double-right"
+        },
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
