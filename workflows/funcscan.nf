@@ -183,7 +183,6 @@ if (params.run_gecco && params.input_gbk) {
 
 
         GECCO_CONVERT(ch_direct)
-        ch_versions = GECCO_CONVERT.out.versions
 }
 
     /*
