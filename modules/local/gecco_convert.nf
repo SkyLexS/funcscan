@@ -1,6 +1,8 @@
 process GECCO_CONVERT {
     tag "$meta"
     
+    container 'quay.io/biocontainers/gecco:0.9.10--pyhdfd78af_0'
+
     input:
     tuple val(meta), path(gbk, stageAs: "input.gbk")
     
