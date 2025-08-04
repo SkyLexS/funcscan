@@ -165,23 +165,9 @@ workflow FUNCSCAN {
 */
 if (params.run_gecco && params.input_gbk) {
     def gbk_file = file(params.input_gbk)
-    def ch_direct = Channel.of([ [ id: "test_sample" ], gbk_file])
-        // .filter { meta, file ->
-        //     if (file == [] || file.isEmpty()) {
-        //         log.warn("[nf-core/funcscan] Sample ${meta.id} does not have GBK annotation file. GECCO analysis will be skipped.")
-        //         false
-        //     } else {
-        //         true
-        //     }
-        // }
-        // .map { meta, gbk ->
-        //     def hmm_path = (params.gecco_hmm && params.gecco_hmm != '') ? params.gecco_hmm : ""
-        //     [meta, gbk, hmm_path]
-        // }
-    
+    def ch_direct = Channel.of([ [ id: "test_sample" ], gbk_file])    
 
-
-        GECCO_CONVERT(ch_direct)
+    GECCO_CONVERT(ch_direct)
 }
 
     /*
