@@ -164,7 +164,6 @@ workflow FUNCSCAN {
     GECCO CONVERT
 */
 if (params.run_gecco && params.input_gbk) {
-    ch_gecco_input = ch_prepped_input.gbk
     def gbk_file = file(params.input_gbk)
     def hmm_file = params.gecco_hmm ? file(params.gecco_hmm) : []
     def ch_direct = Channel.of([ [ id: "test_sample" ], gbk_file, hmm_file ])
