@@ -23,13 +23,6 @@
                     "format": "file-path",
                     "exists": true,
                     "help_text": "Provide a custom HMM profile file. If not provided, GECCO will use its default HMM profiles."
-                },
-                "gecco_hmm": {
-                    "type": "string",
-                    "description": "Path to custom HMM profile for GECCO",
-                    "format": "file-path",
-                    "exists": true,
-                    "help_text": "Provide a custom HMM profile file. If not provided, GECCO will use its default HMM profiles."
                 }
             },
             "fa_icon": "fas fa-angle-double-right"

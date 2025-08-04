@@ -2,7 +2,7 @@ process GECCO_CONVERT {
     tag "$meta"
     
     input:
-    tuple val(meta), path(gbk, stageAs: "input.gbk"), path(hmm)
+    tuple val(meta), path(gbk, stageAs: "input.gbk")
     
     output:
     tuple val(meta), path("*.gff"), emit: gff, optional: true
@@ -15,19 +15,11 @@ process GECCO_CONVERT {
     """
     echo "Starting GECCO run with custom HMM" >> gecco.log
     
-    if gecco run \\
-        --genome input.gbk \\
-        --hmm $hmm \\
-        --output-dir . \\
-        --jobs 1 >> gecco.log 2>&1; then
-        echo "GECCO run completed successfully" >> gecco.log
-    else
         echo "Custom HMM run failed. GECCO run with default HMM" >> gecco.log
         gecco run \\
             --genome input.gbk \\
             --output-dir . \\
             --jobs 1 >> gecco.log 2>&1
-    fi
     
     echo "Generated files after GECCO run:" >> gecco.log
     ls -la >> gecco.log
