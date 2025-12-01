@@ -13,6 +13,8 @@ include { COMBGC                                 } from '../../modules/local/com
 include { TABIX_BGZIP as BGC_TABIX_BGZIP         } from '../../modules/nf-core/tabix/bgzip/main'
 include { MERGE_TAXONOMY_COMBGC                  } from '../../modules/local/merge_taxonomy_combgc'
 include { GECCO_CONVERT                          } from '../../modules/nf-core/gecco/convert/main'
+include { BIGSLICE_PREP_INPUT                    } from '../../modules/nf-core/bigslice/prep_input/main'
+include { BIGSLICE_RUN                           } from '../../modules/nf-core/bigslice/run/main'
 
 workflow BGC {
     take:
@@ -66,6 +68,22 @@ workflow BGC {
             }
 
         ch_bgcresults_for_combgc = ch_bgcresults_for_combgc.mix(ch_antismashresults_for_combgc)
+
+        if(params.bgc_run_bigslice){
+            if(!params.bgc_bigslice_models){
+                error "BigSLICE models directory not provided. Use --bigslice_models"
+            }
+            def models_dir = file(params.bigslice_models)
+
+            ch_antismash_dirs = ANTISMASH_ANTISMASH.out.html
+                .map { meta, html -> html.parent }
+                .collect()
+
+            BIGSLICE_PREP_INPUT(ch_antismash_dirs)
+            BIGSLICE_RUN(BIGSLICE_PREP_INPUT.out.input_dir, models_dir)
+            
+            ch_versions = ch_versions.mix(BIGSLICE_RUN.out.versions)
+        }
 
     }
 
