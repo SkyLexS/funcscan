@@ -22,9 +22,9 @@ process BIGSLICE_RUN {
   label 'bigslice'
 
   conda "${moduleDir}/enviroment.yml"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-      'https://depot.galaxyproject.org/singularity/bigslice:2.0.0--pyhdfd78af_0':
-      'biocontainers/bigslice:2.0.0--pyhdfd78af_0' }"
+container "${ workflow.containerEngine == 'singularity' && !task. ext.singularity_pull_docker_container ?
+    'https://depot.galaxyproject.org/singularity/bigslice:2.0.2--pyh8ed023e_0':
+    'quay.io/biocontainers/bigslice:2.0.2--pyh8ed023e_0' }"
 
   input:
   path input_dir    // structured input directory from BIGSLICE_PREP_INPUT (contains datasets.tsv, BGC files, taxonomy)
