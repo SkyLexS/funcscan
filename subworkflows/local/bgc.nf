@@ -69,21 +69,38 @@ workflow BGC {
 
         ch_bgcresults_for_combgc = ch_bgcresults_for_combgc.mix(ch_antismashresults_for_combgc)
 
-        if(params.bgc_run_bigslice){
-            if(!params.bgc_bigslice_models){
-                error "BigSLICE models directory not provided. Use --bgc_bigslice_models"
+if(params.bgc_run_bigslice){
+    if(!params.bgc_bigslice_models){
+        error "BigSLICE models directory not provided. Use --bgc_bigslice_models"
+    }
+    def models_dir = file(params. bgc_bigslice_models, checkIfExists: true)
+
+    ch_antismash_dirs = ANTISMASH_ANTISMASH.out.html
+        .map { meta, html -> html.parent }
+        .collect()
+        .map { dirs ->
+            dirs.findAll { dir ->
+                def gbkFiles = file("${dir}/*.region*.gbk")
+                gbkFiles.size() > 0
             }
-            def models_dir = file(params.bgc_bigslice_models)
-
-            ch_antismash_dirs = ANTISMASH_ANTISMASH.out.html
-                .map { meta, html -> html.parent }
-                .collect()
-
-            BIGSLICE_PREP_INPUT(ch_antismash_dirs)
-            BIGSLICE_RUN(BIGSLICE_PREP_INPUT.out.input_dir, models_dir)
-            
-            ch_versions = ch_versions.mix(BIGSLICE_RUN.out.versions)
         }
+        .filter { it. size() > 0 }
+    
+    ch_antismash_dirs.branch {
+        with_bgcs: it.size() > 0
+        empty: true
+    }.set { ch_branched }
+    
+    ch_branched.empty.subscribe {
+        log.warn "[nf-core/funcscan] No BGCs found by antiSMASH - skipping BigSLICE analysis"
+    }
+    
+    BIGSLICE_PREP_INPUT(ch_branched. with_bgcs)
+    BIGSLICE_RUN(BIGSLICE_PREP_INPUT.out.input_dir, models_dir)
+    
+    ch_versions = ch_versions.mix(BIGSLICE_PREP_INPUT.out.versions. ifEmpty([]))
+    ch_versions = ch_versions.mix(BIGSLICE_RUN. out.versions.ifEmpty([]))
+}
 
     }
 

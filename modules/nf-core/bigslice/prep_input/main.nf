@@ -33,6 +33,7 @@ container "${ workflow.containerEngine == 'singularity' && !task. ext.singularit
   output:
   // complete "input" folder structure for BiG-SLiCE (contains dataset/, taxonomy/, datasets.tsv)
   path "input", emit: input_dir
+  path "versions.yml", emit: versions
 
   script:
   // prepare quoted directory list for bash for-loop processing
