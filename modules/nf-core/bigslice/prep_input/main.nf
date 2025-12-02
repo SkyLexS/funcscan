@@ -19,7 +19,7 @@
  */
 process BIGSLICE_PREP_INPUT {
   label 'bigslice'
-  tag "dataset=${params.bigslice_dataset_name}"
+  tag "dataset=${params.bgc_bigslice_dataset_name}"
 
   conda "${moduleDir}/environment.yml"
   container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -41,7 +41,7 @@ process BIGSLICE_PREP_INPUT {
   set -euo pipefail
 
   ROOT="input"                              # BiG-SLiCE input root directory
-  DS="${params.bigslice_dataset_name}"      # dataset name (e.g., 'antismash')
+  DS="${params.bgc_bigslice_dataset_name}"      # dataset name (e.g., 'antismash')
   OUT="\$ROOT/\$DS"                         # dataset-specific output directory
   TAXROOT="\$ROOT/taxonomy"                 # taxonomy directory
 
@@ -57,8 +57,8 @@ process BIGSLICE_PREP_INPUT {
       | xargs -0 -I{} cp -f "{}" "\$OUT/\$sample/"
   done
 
-  if [ -n "${params.bigslice_taxonomy ?: ''}" ]; then
-    cp "${params.bigslice_taxonomy}" "\$TAXROOT/dataset_taxonomy.tsv"
+  if [ -n "${params.bgc_bigslice_taxonomy ?: ''}" ]; then
+    cp "${params.bgc_bigslice_taxonomy}" "\$TAXROOT/dataset_taxonomy.tsv"
   else
     printf "accession\\ttaxdomain\\tphylum\\tclass\\torder\\tfamily\\tgenus\\tspecies\\torganism\\n" > "\$TAXROOT/dataset_taxonomy.tsv"
     
