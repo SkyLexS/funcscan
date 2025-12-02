@@ -71,9 +71,9 @@ workflow BGC {
 
         if(params.bgc_run_bigslice){
             if(!params.bgc_bigslice_models){
-                error "BigSLICE models directory not provided. Use --bigslice_models"
+                error "BigSLICE models directory not provided. Use --bgc_bigslice_models"
             }
-            def models_dir = file(params.bigslice_models)
+            def models_dir = file(params.bgc_bigslice_models)
 
             ch_antismash_dirs = ANTISMASH_ANTISMASH.out.html
                 .map { meta, html -> html.parent }
