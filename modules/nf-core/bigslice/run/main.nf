@@ -32,6 +32,7 @@ process BIGSLICE_RUN {
 
   output:
   path "output", emit: outdir   // complete BiG-SLiCE output directory with clustering results and reports
+  path "versions.yml", emit: versions
 
   script:
   """
