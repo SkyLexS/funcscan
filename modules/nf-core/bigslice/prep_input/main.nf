@@ -38,6 +38,7 @@ container "${ workflow.containerEngine == 'singularity' && !task. ext.singularit
   script:
   // prepare quoted directory list for bash for-loop processing
   def quoted = antismash_dirs.collect { "\"${it}\"" }.join(' ')
+  def VERSION = '2.0.2'
   """
   set -euo pipefail
 

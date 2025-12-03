@@ -35,6 +35,7 @@ container "${ workflow.containerEngine == 'singularity' && !task. ext.singularit
   path "versions.yml", emit: versions
 
   script:
+  def VERSION = '2.0.2'
   """
   set -euo pipefail
   
