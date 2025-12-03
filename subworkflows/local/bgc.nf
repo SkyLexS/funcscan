@@ -70,39 +70,38 @@ workflow BGC {
         ch_bgcresults_for_combgc = ch_bgcresults_for_combgc.mix(ch_antismashresults_for_combgc)
 
 if(params.bgc_run_bigslice){
-    if(! params.bgc_bigslice_models){
+    if(!params.bgc_bigslice_models){
         error "BigSLICE models directory not provided. Use --bgc_bigslice_models"
     }
     def models_dir = file(params.bgc_bigslice_models, checkIfExists: true)
 
-    // Verifică care sample-uri au BGC-uri (fișiere *.region*.gbk)
-    ch_antismash_with_bgcs = ANTISMASH_ANTISMASH.out. gbk_results
+    // Extrage doar directoarele care conțin BGC-uri
+    ch_antismash_dirs = ANTISMASH_ANTISMASH.out.gbk_results
         .filter { meta, gbk_dir ->
-            def gbkFiles = file("${gbk_dir}/*.region*.gbk")
-            def hasBGCs = gbkFiles.size() > 0
-            if (!hasBGCs) {
-                log.debug "[nf-core/funcscan] Sample ${meta.id}: No BGCs found by antiSMASH"
+            // gbk_dir poate fi un director sau o listă de fișiere
+            def dirFile = gbk_dir instanceof Path ? gbk_dir : file(gbk_dir)
+            
+            // Caută fișiere care conțin "region" și se termină cu ".gbk"
+            def hasBGCs = false
+            if (dirFile.isDirectory()) {
+                hasBGCs = dirFile.list().any { it.toString().contains('. region') && it.toString().endsWith('.gbk') }
             }
+            
+            if (!hasBGCs) {
+                log. debug "[nf-core/funcscan] Sample ${meta.id}: No BGC regions found in antiSMASH output"
+            }
+            
             return hasBGCs
         }
-    
-    // Colectează directoarele pentru BigSLICE
-    ch_antismash_dirs = ch_antismash_with_bgcs
         .map { meta, gbk_dir -> gbk_dir }
         .collect()
-        . filter { dirs -> 
-            if (dirs.size() == 0) {
-                log.warn "[nf-core/funcscan] No BGCs found by antiSMASH across all samples - skipping BigSLICE analysis"
-            }
-            return dirs. size() > 0
-        }
     
-    // Rulează BigSLICE doar dacă avem BGC-uri
+    // Rulează BigSLICE
     BIGSLICE_PREP_INPUT(ch_antismash_dirs)
-    BIGSLICE_RUN(BIGSLICE_PREP_INPUT. out.input_dir, models_dir)
+    BIGSLICE_RUN(BIGSLICE_PREP_INPUT.out.input_dir, models_dir)
     
     ch_versions = ch_versions.mix(BIGSLICE_PREP_INPUT.out.versions)
-    ch_versions = ch_versions. mix(BIGSLICE_RUN.out.versions)
+    ch_versions = ch_versions.mix(BIGSLICE_RUN.out.versions)
 }
 
     }
