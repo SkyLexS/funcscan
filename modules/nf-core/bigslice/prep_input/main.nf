@@ -74,5 +74,10 @@ container "${ workflow.containerEngine == 'singularity' && !task. ext.singularit
     echo "# dataset_name\\tdataset_path\\ttaxonomy_path\\tdescription"
     printf "%s\\t%s\\t%s\\t%s\\n" "\$DS" "\$DS" "taxonomy/dataset_taxonomy.tsv" "antiSMASH \$DS"
   } > "\$ROOT/datasets.tsv"
+
+    cat <<-END_VERSIONS > versions.yml
+  "${task.process}":
+      bigslice: \$(bigslice --version 2>&1 | grep -oP 'BiG-SLiCE \\K[0-9.]+' || echo "${VERSION}")
+  END_VERSIONS
   """
 }

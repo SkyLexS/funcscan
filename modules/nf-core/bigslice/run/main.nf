@@ -49,5 +49,10 @@ container "${ workflow.containerEngine == 'singularity' && !task. ext.singularit
     -i "${input_dir}" \
     --program_db_folder "${models_dir}" \
     output
+      
+  cat <<-END_VERSIONS > versions.yml
+  "${task.process}":
+      bigslice: \$(bigslice --version 2>&1 | grep -oP 'BiG-SLiCE \\K[0-9.]+' || echo "${VERSION}")
+  END_VERSIONS
   """
 }
