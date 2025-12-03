@@ -55,7 +55,7 @@ container "${ workflow.containerEngine == 'singularity' && !task. ext.singularit
     sample=\$(basename "\$d")               # extract sample name from directory path
     mkdir -p "\$OUT/\$sample"               # create sample-specific subdirectory
     
-    find "\$d" -type f \\( -name "*.region*.gbk" -o -name "*.gbk" \\) -print0 \
+    find -L "\$d" -type f \\( -name "*.region*.gbk" -o -name "*.gbk" \\) -print0 \
       | xargs -0 -I{} cp -f "{}" "\$OUT/\$sample/"
   done
 
