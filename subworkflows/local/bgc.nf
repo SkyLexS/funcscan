@@ -70,7 +70,7 @@ workflow BGC {
         ch_bgcresults_for_combgc = ch_bgcresults_for_combgc.mix(ch_antismashresults_for_combgc)
 
 if(params.bgc_run_bigslice){
-    if(! params.bgc_bigslice_models){
+    if(!params.bgc_bigslice_models){
         error "BigSLICE models directory not provided. Use --bgc_bigslice_models"
     }
     def models_dir = file(params.bgc_bigslice_models, checkIfExists: true)
@@ -81,7 +81,7 @@ if(params.bgc_run_bigslice){
         .filter { meta, dir ->
             // Verifică dacă există fișiere cu pattern-ul specific
             def bgcFiles = dir.listFiles()?. findAll { 
-                it.name.contains('.  region') && it.name.endsWith('. gbk') 
+                it.name.contains('.region') && it.name.endsWith('.gbk') 
             } ?: []
             
             def hasBGCs = bgcFiles.size() > 0
@@ -93,7 +93,7 @@ if(params.bgc_run_bigslice){
             return hasBGCs
         }
         .map { meta, dir -> dir }
-        .  collect()
+        .collect()
     
     // Rulează BigSLICE
     BIGSLICE_PREP_INPUT(ch_antismash_dirs)
